@@ -66,10 +66,28 @@
             margin-top: 40px;
             opacity: .7;
         }
-        .loading {
+        .download-options {
             display: none;
-            margin: 20px 0;
-            color: #ffcc00;
+            margin-top: 30px;
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+        .download-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 80%;
+            transition: 0.3s;
+        }
+        .download-btn:hover {
+            background: #218838;
         }
     </style>
 </head>
@@ -81,11 +99,20 @@
     <div class="container">
         <h1>حمّل أي فيديو من أي منصة</h1>
         <p>الصيغ المتاحة: MP4 – MP3 – HD – Full HD – 4K</p>
-        <input type="text" id="videoUrl" placeholder="حط رابط اليوتيوب هنا" />
-        <button onclick="downloadVideo()">تحميل مباشر</button>
+        <input type="text" id="videoUrl" placeholder="حط رابط الفيديو هنا" />
+        <button onclick="showDownloadOptions()">عرض خيارات التحميل</button>
         
-        <div class="loading" id="loading">
-            <p>🎬 جاري التوجيه لخدمة التحميل...</p>
+        <div class="download-options" id="downloadOptions">
+            <h3>🎯 إختر موقع التحميل:</h3>
+            <button class="download-btn" onclick="openService('y2mate')">
+                📥 Y2Mate (مستقر وسريع)
+            </button>
+            <button class="download-btn" onclick="openService('savefrom')">
+                💾 SaveFrom (يدعم كل المنصات)
+            </button>
+            <button class="download-btn" onclick="openService('onlineconverter')">
+                🎬 Online Converter (جودة عالية)
+            </button>
         </div>
     </div>
 
@@ -94,49 +121,42 @@
     </footer>
 
     <script>
-        function downloadVideo() {
+        function showDownloadOptions() {
             const url = document.getElementById('videoUrl').value;
-            const loading = document.getElementById('loading');
-            const button = document.querySelector('button');
             
             if (!url) {
                 alert('📝 من فضلك أدخل رابط الفيديو أولاً');
                 return;
             }
 
-            // شغل Loading
-            loading.style.display = 'block';
-            button.textContent = 'جاري التوجيه...';
-            button.disabled = true;
-
-            // بعد 1.5 ثانية اروح لموقع التحميل
-            setTimeout(() => {
-                if (url.includes('youtube.com') || url.includes('youtu.be')) {
-                    window.open('https://www.y2mate.guru/', '_blank');
-                } else if (url.includes('facebook.com') || url.includes('fb.watch')) {
-                    window.open('https://www.y2mate.guru/facebook', '_blank');
-                } else if (url.includes('tiktok.com')) {
-                    window.open('https://www.y2mate.guru/tiktok', '_blank');
-                } else if (url.includes('instagram.com')) {
-                    window.open('https://www.y2mate.guru/instagram', '_blank');
-                } else {
-                    window.open('https://www.y2mate.guru/', '_blank');
-                }
-                
-                // ارجع كل حاجة لطبيعتها
-                loading.style.display = 'none';
-                button.textContent = 'تحميل مباشر';
-                button.disabled = false;
-                
-                alert('✅ تم فتح صفحة التحميل!\nلو مافتحتش افحص الـ Pop-up blocker');
-                
-            }, 1500);
+            // عرض خيارات التحميل
+            document.getElementById('downloadOptions').style.display = 'block';
         }
 
-        // الضغط على Enter يضغط الزر
+        function openService(service) {
+            const url = document.getElementById('videoUrl').value;
+            let serviceUrl = '';
+            
+            // تحديد الموقع حسب الاختيار
+            if (service === 'y2mate') {
+                serviceUrl = 'https://www.y2mate.guru/';
+            } else if (service === 'savefrom') {
+                serviceUrl = 'https://en.savefrom.net/';
+            } else if (service === 'onlineconverter') {
+                serviceUrl = 'https://www.onlinevideoconverter.com/';
+            }
+            
+            // فتح في نافذة جديدة
+            window.open(serviceUrl, '_blank');
+            
+            // رسالة تأكيد
+            alert('✅ تم فتح موقع التحميل في نافذة جديدة\n🔗 استخدم الموقع لتحميل الفيديو');
+        }
+
+        // السماح بالضغط على Enter
         document.getElementById('videoUrl').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                downloadVideo();
+                showDownloadOptions();
             }
         });
     </script>
