@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SnapGo Pro - تحميل مباشر</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #0d0d0d;
+            color: #fff;
+        }
+        header {
+            background: #111;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #222;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffcc00;
+        }
+        .container {
+            max-width: 700px;
+            margin: 60px auto;
+            text-align: center;
+        }
+        h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #ffcc00;
+        }
+        p {
+            opacity: .8;
+            margin-bottom: 30px;
+        }
+        input {
+            width: 90%;
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            font-size: 18px;
+            outline: none;
+        }
+        button {
+            margin-top: 20px;
+            padding: 15px 40px;
+            background: #ffcc00;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: .3s;
+        }
+        button:hover {
+            background: #e6b800;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            opacity: .7;
+        }
+        .video-info {
+            display: none;
+            margin-top: 30px;
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: right;
+        }
+        .format-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 200px;
+        }
+        .format-btn:hover {
+            background: #218838;
+        }
+        .loading {
+            display: none;
+            color: #ffcc00;
+            font-size: 18px;
+        }
+        .thumbnail {
+            max-width: 300px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">SnapGo Pro 🚀</div>
+    </header>
+
+    <div class="container">
+        <h1>تحميل مباشر من موقعنا</h1>
+        <p>MP4 - MP3 - HD - جميع الجودات</p>
+        <input type="text" id="videoUrl" placeholder="https://www.youtube.com/watch?v=..." />
+        <button onclick="analyzeVideo()">تحليل الفيديو</button>
+        
+        <div class="loading" id="loading">جاري تحليل الرابط...</div>
+        
+        <div class="video-info" id="videoInfo">
+            <img id="thumbnail" class="thumbnail" src="" alt="Thumbnail">
+            <h3 id="videoTitle"></h3>
+            <p id="videoDuration"></p>
+            <div id="formatButtons"></div>
+        </div>
+    </div>
+
+    <footer>
+        © 2025 SnapGo Pro - تحميل مباشر من موقعنا
+    </footer>
+
+    <script>
+        async function analyzeVideo() {
+            const url = document.getElementById('videoUrl').value;
+            const loading = document.getElementById('loading');
+            const videoInfo = document.getElementById('videoInfo');
+            
+            if (!url) {
+                alert('من فضلك أدخل رابط اليوتيوب');
+                return;
+            }
+
+            loading.style.display = 'block';
+            videoInfo.style.display = 'none';
+
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: url })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    // عرض معلومات الفيديو
+                    document.getElementById('thumbnail').src = data.thumbnail;
+                    document.getElementById('videoTitle').textContent = data.title;
+                    document.getElementById('videoDuration').textContent = `المدة: ${Math.round(data.duration / 60)} دقيقة`;
+                    
+                    // عرض أزرار التحميل
+                    const formatButtons = document.getElementById('formatButtons');
+                    formatButtons.innerHTML = data.formats.map(format => `
+                        <button class="format-btn" onclick="downloadVideo('${url}', '${format.quality}', '${format.format}')">
+                           ⬇️ تحميل ${format.label}
+                        </button>
+                    `).join('');
+                    
+                    videoInfo.style.display = 'block';
+                } else {
+                    alert('خطأ: ' + data.error);
+                }
+            } catch (error) {
+                alert('خطأ في الاتصال بالسيرفر: ' + error.message);
+            }
+
+            loading.style.display = 'none';
+        }
+
+        function downloadVideo(url, quality, format) {
+            // تحميل مباشر من السيرفر
+            const downloadUrl = `/download?url=${encodeURIComponent(url)}&quality=${quality}&format=${format}`;
+            window.open(downloadUrl, '_blank');
+        }
+
+        // الضغط على Enter
+        document.getElementById('videoUrl').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                analyzeVideo();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,37 +1,85 @@
 const express = require('express');
-const path = require('path');
+const cors = require('cors');
+const ytdl = require('ytdl-core');
+const axios = require('axios');
 const app = express();
 
-// خدمة الملفات الثابتة
-app.use(express.static(path.join(__dirname, 'public')));
-
-// علشان نعرف نستقبل بيانات من الفورم
+// إعدادات السيرفر
+app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
 
-// الراوت الأساسي
+// صفحة الرئيسية
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(__dirname + '/public/index.html');
 });
 
-// API للتحميل (دمية حالياً)
-app.post('/download', (req, res) => {
+// تحليل الفيديو وإرجاع المعلومات
+app.post('/analyze', async (req, res) => {
     const { url } = req.body;
     
-    // ده كود دمي - هيحتاج تطوير
-    res.json({
-        success: true,
-        message: 'جاري التطوير - استخدم y2mate مؤقتاً',
-        links: [
-            { quality: '720p', format: 'MP4', url: '#' },
-            { quality: '480p', format: 'MP4', url: '#' },
-            { quality: 'MP3', format: 'MP3', url: '#' }
-        ]
-    });
+    try {
+        if (ytdl.validateURL(url)) {
+            const info = await ytdl.getInfo(url);
+            const videoDetails = info.videoDetails;
+            
+            res.json({
+                success: true,
+                title: videoDetails.title,
+                thumbnail: videoDetails.thumbnails[0].url,
+                duration: videoDetails.lengthSeconds,
+                formats: [
+                    { quality: '1080p', format: 'mp4', label: 'جودة عالية HD' },
+                    { quality: '720p', format: 'mp4', label: 'جودة متوسطة' },
+                    { quality: '480p', format: 'mp4', label: 'جودة منخفضة' },
+                    { quality: 'mp3', format: 'mp3', label: 'صوت فقط MP3' }
+                ]
+            });
+        } else {
+            res.json({ 
+                success: false, 
+                error: 'رابط غير مدعوم. جرب رابط يوتيوب.' 
+            });
+        }
+    } catch (error) {
+        res.json({ 
+            success: false, 
+            error: 'فشل في تحليل الرابط: ' + error.message 
+        });
+    }
+});
+
+// تحميل الفيديو مباشرة
+app.get('/download', async (req, res) => {
+    const { url, quality, format } = req.query;
+    
+    try {
+        if (format === 'mp3') {
+            // تحميل كـ MP3
+            res.header('Content-Disposition', 'attachment; filename="audio.mp3"');
+            ytdl(url, { filter: 'audioonly', quality: 'highestaudio' })
+                .pipe(res);
+        } else {
+            // تحميل كـ MP4
+            let filter;
+            if (quality === '1080p') filter = 'videoandaudio';
+            else if (quality === '720p') filter = 'videoandaudio';
+            else filter = 'videoandaudio';
+            
+            res.header('Content-Disposition', 'attachment; filename="video.mp4"');
+            ytdl(url, { filter: filter, quality: 'highest' })
+                .pipe(res);
+        }
+    } catch (error) {
+        res.json({ 
+            success: false, 
+            error: 'فشل في التحميل: ' + error.message 
+        });
+    }
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`✅ السيرفر شغال على http://localhost:${PORT}`);
-    console.log(`🎯 افتح المتصفح على الرابط ده`);
+    console.log(`✅ السيرفر شغال على البورت ${PORT}`);
+    console.log(`🌐 افتح: http://localhost:${PORT}`);
 });
