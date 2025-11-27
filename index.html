@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SnapGo - تحميل الفيديوهات</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #0d0d0d;
+            color: #fff;
+        }
+        header {
+            background: #111;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #222;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffcc00;
+        }
+        .container {
+            max-width: 700px;
+            margin: 60px auto;
+            text-align: center;
+        }
+        h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #ffcc00;
+        }
+        p {
+            opacity: .8;
+            margin-bottom: 30px;
+        }
+        input {
+            width: 90%;
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            font-size: 18px;
+            outline: none;
+        }
+        button {
+            margin-top: 20px;
+            padding: 15px 40px;
+            background: #ffcc00;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: .3s;
+        }
+        button:hover {
+            background: #e6b800;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            opacity: .7;
+        }
+        #results {
+            margin-top: 30px;
+            display: none;
+        }
+        .download-option {
+            background: #1a1a1a;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">SnapGo 🚀</div>
+    </header>
+
+    <div class="container">
+        <h1>حمّل أي فيديو من أي منصة</h1>
+        <p>الصيغ المتاحة: MP4 – MP3 – HD – Full HD – 4K</p>
+        <input type="text" id="videoUrl" placeholder="حط الرابط هنا يا معلم" />
+        <button onclick="analyzeVideo()">تحميل</button>
+        
+        <div id="results">
+            <h3>خيارات التحميل المتاحة:</h3>
+            <div id="downloadLinks"></div>
+        </div>
+    </div>
+
+    <footer>
+        © 2025 SnapGo - All Rights Reserved
+    </footer>
+
+    <script>
+        async function analyzeVideo() {
+            const url = document.getElementById('videoUrl').value;
+            const button = document.querySelector('button');
+            const results = document.getElementById('results');
+            
+            if (!url) {
+                alert('من فضلك أدخل رابط الفيديو');
+                return;
+            }
+
+            button.textContent = 'جاري البحث...';
+            button.disabled = true;
+
+            try {
+                // محاكاة للباك اند - جرب خدمة خارجية
+                if (url.includes('youtube') || url.includes('youtu.be')) {
+                    // استخدم y2mate كبديل مؤقت
+                    const videoId = extractYouTubeId(url);
+                    if (videoId) {
+                        showMockResults(videoId);
+                    } else {
+                        throw new Error('رابط غير صحيح');
+                    }
+                } else {
+                    throw new Error('جرب رابط يوتيوب أولاً');
+                }
+            } catch (error) {
+                alert('جرب خدمة y2mate مباشرة: ' + error.message);
+                // توجيه لخدمة خارجية
+                window.open('https://www.y2mate.guru/', '_blank');
+            }
+
+            button.textContent = 'تحميل';
+            button.disabled = false;
+        }
+
+        function extractYouTubeId(url) {
+            const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[7].length === 11) ? match[7] : false;
+        }
+
+        function showMockResults(videoId) {
+            const linksContainer = document.getElementById('downloadLinks');
+            const results = document.getElementById('results');
+            
+            const mockData = [
+                { quality: '1080p HD', format: 'MP4', size: '125MB' },
+                { quality: '720p HD', format: 'MP4', size: '85MB' },
+                { quality: '480p', format: 'MP4', size: '45MB' },
+                { quality: 'MP3', format: 'MP3', size: '8MB' }
+            ];
+
+            linksContainer.innerHTML = mockData.map(item => `
+                <div class="download-option">
+                    <strong>${item.quality}</strong> - ${item.format} (${item.size})
+                    <button onclick="downloadFromService('${videoId}', '${item.quality}')" 
+                            style="background: #007bff; color: white; border: none; padding: 8px 15px; border-radius: 5px; margin-right: 10px;">
+                        تحميل من y2mate
+                    </button>
+                </div>
+            `).join('');
+            
+            results.style.display = 'block';
+        }
+
+        function downloadFromService(videoId, quality) {
+            // توجيه لخدمة y2mate مع الفيديو المطلوب
+            window.open(`https://www.y2mate.guru/youtube/${videoId}`, '_blank');
+        }
+    </script>
+</body>
+</html>
