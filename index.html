@@ -66,16 +66,10 @@
             margin-top: 40px;
             opacity: .7;
         }
-        #results {
-            margin-top: 30px;
+        .loading {
             display: none;
-        }
-        .download-option {
-            background: #1a1a1a;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 10px;
-            border: 1px solid #333;
+            margin: 20px 0;
+            color: #ffcc00;
         }
     </style>
 </head>
@@ -87,12 +81,11 @@
     <div class="container">
         <h1>حمّل أي فيديو من أي منصة</h1>
         <p>الصيغ المتاحة: MP4 – MP3 – HD – Full HD – 4K</p>
-        <input type="text" id="videoUrl" placeholder="حط الرابط هنا يا معلم" />
-        <button onclick="analyzeVideo()">تحميل</button>
+        <input type="text" id="videoUrl" placeholder="حط رابط اليوتيوب هنا" />
+        <button onclick="downloadVideo()">تحميل مباشر</button>
         
-        <div id="results">
-            <h3>خيارات التحميل المتاحة:</h3>
-            <div id="downloadLinks"></div>
+        <div class="loading" id="loading">
+            <p>🎬 جاري التوجيه لخدمة التحميل...</p>
         </div>
     </div>
 
@@ -101,76 +94,51 @@
     </footer>
 
     <script>
-        async function analyzeVideo() {
+        function downloadVideo() {
             const url = document.getElementById('videoUrl').value;
+            const loading = document.getElementById('loading');
             const button = document.querySelector('button');
-            const results = document.getElementById('results');
             
             if (!url) {
-                alert('من فضلك أدخل رابط الفيديو');
+                alert('📝 من فضلك أدخل رابط الفيديو أولاً');
                 return;
             }
 
-            button.textContent = 'جاري البحث...';
+            // شغل Loading
+            loading.style.display = 'block';
+            button.textContent = 'جاري التوجيه...';
             button.disabled = true;
 
-            try {
-                // محاكاة للباك اند - جرب خدمة خارجية
-                if (url.includes('youtube') || url.includes('youtu.be')) {
-                    // استخدم y2mate كبديل مؤقت
-                    const videoId = extractYouTubeId(url);
-                    if (videoId) {
-                        showMockResults(videoId);
-                    } else {
-                        throw new Error('رابط غير صحيح');
-                    }
+            // بعد 1.5 ثانية اروح لموقع التحميل
+            setTimeout(() => {
+                if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                    window.open('https://www.y2mate.guru/', '_blank');
+                } else if (url.includes('facebook.com') || url.includes('fb.watch')) {
+                    window.open('https://www.y2mate.guru/facebook', '_blank');
+                } else if (url.includes('tiktok.com')) {
+                    window.open('https://www.y2mate.guru/tiktok', '_blank');
+                } else if (url.includes('instagram.com')) {
+                    window.open('https://www.y2mate.guru/instagram', '_blank');
                 } else {
-                    throw new Error('جرب رابط يوتيوب أولاً');
+                    window.open('https://www.y2mate.guru/', '_blank');
                 }
-            } catch (error) {
-                alert('جرب خدمة y2mate مباشرة: ' + error.message);
-                // توجيه لخدمة خارجية
-                window.open('https://www.y2mate.guru/', '_blank');
+                
+                // ارجع كل حاجة لطبيعتها
+                loading.style.display = 'none';
+                button.textContent = 'تحميل مباشر';
+                button.disabled = false;
+                
+                alert('✅ تم فتح صفحة التحميل!\nلو مافتحتش افحص الـ Pop-up blocker');
+                
+            }, 1500);
+        }
+
+        // الضغط على Enter يضغط الزر
+        document.getElementById('videoUrl').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                downloadVideo();
             }
-
-            button.textContent = 'تحميل';
-            button.disabled = false;
-        }
-
-        function extractYouTubeId(url) {
-            const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[7].length === 11) ? match[7] : false;
-        }
-
-        function showMockResults(videoId) {
-            const linksContainer = document.getElementById('downloadLinks');
-            const results = document.getElementById('results');
-            
-            const mockData = [
-                { quality: '1080p HD', format: 'MP4', size: '125MB' },
-                { quality: '720p HD', format: 'MP4', size: '85MB' },
-                { quality: '480p', format: 'MP4', size: '45MB' },
-                { quality: 'MP3', format: 'MP3', size: '8MB' }
-            ];
-
-            linksContainer.innerHTML = mockData.map(item => `
-                <div class="download-option">
-                    <strong>${item.quality}</strong> - ${item.format} (${item.size})
-                    <button onclick="downloadFromService('${videoId}', '${item.quality}')" 
-                            style="background: #007bff; color: white; border: none; padding: 8px 15px; border-radius: 5px; margin-right: 10px;">
-                        تحميل من y2mate
-                    </button>
-                </div>
-            `).join('');
-            
-            results.style.display = 'block';
-        }
-
-        function downloadFromService(videoId, quality) {
-            // توجيه لخدمة y2mate مع الفيديو المطلوب
-            window.open(`https://www.y2mate.guru/youtube/${videoId}`, '_blank');
-        }
+        });
     </script>
 </body>
 </html>
