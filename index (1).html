@@ -1,0 +1,281 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SnapGo - تحميل مباشر</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #0d0d0d;
+            color: #fff;
+        }
+        header {
+            background: #111;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #222;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffcc00;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            text-align: center;
+        }
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #ffcc00;
+        }
+        .input-group {
+            margin: 20px 0;
+            padding: 20px;
+            background: #1a1a1a;
+            border-radius: 10px;
+        }
+        input {
+            width: 80%;
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        button {
+            padding: 15px 30px;
+            background: #ffcc00;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            margin: 10px;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #e6b800;
+        }
+        .download-frame {
+            width: 100%;
+            height: 800px;
+            border: none;
+            border-radius: 10px;
+            margin-top: 20px;
+            background: #fff;
+        }
+        .instructions {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: right;
+        }
+        .instructions ol {
+            text-align: right;
+            padding-right: 20px;
+        }
+        .ad-container {
+            margin: 15px 0;
+            padding: 15px;
+            background: #1a1a1a;
+            border-radius: 10px;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .supported-sites {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .site-badge {
+            background: #333;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        .service-buttons {
+            margin: 15px 0;
+        }
+        .service-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .service-btn:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">SnapGo 🚀</div>
+    </header>
+
+    <div class="container">
+        <h1>تحميل فيديوهات مجاني</h1>
+        <p>أدخل رابط الفيديو وإختر خدمة التحميل</p>
+        
+        <div class="input-group">
+            <input type="text" id="videoUrl" placeholder="https://www.youtube.com/watch?v=..." />
+            <br>
+            <div class="service-buttons">
+                <button class="service-btn" onclick="openSaveFrom()">💾 SaveFrom.net</button>
+                <button class="service-btn" onclick="openY2Mate()">📥 Y2Mate.com</button>
+                <button class="service-btn" onclick="openConverter()">🎬 Online-Converter</button>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>🎯 طريقة الاستخدام:</h3>
+            <ol>
+                <li>أدخل رابط الفيديو من أي موقع مدعوم</li>
+                <li>إضغط على إسم خدمة التحميل التي تريدها</li>
+                <li>الخدمة ستعمل على تحليل الرابط تلقائياً</li>
+                <li>إختر الجودة والصيغة المناسبة ثم حمّل</li>
+            </ol>
+        </div>
+
+        <div class="supported-sites">
+            <div class="site-badge">YouTube</div>
+            <div class="site-badge">Facebook</div>
+            <div class="site-badge">Instagram</div>
+            <div class="site-badge">TikTok</div>
+            <div class="site-badge">Twitter</div>
+            <div class="site-badge">Dailymotion</div>
+            <div class="site-badge">Vimeo</div>
+            <div class="site-badge">+1000 موقع</div>
+        </div>
+
+        <!-- مكان الإعلانات -->
+        <div class="ad-container">
+            <p>🚀 مساحة إعلانية - سجل في AdSense لبدء الربح من موقعك</p>
+        </div>
+
+        <iframe id="downloadFrame" class="download-frame" 
+                src="about:blank"
+                title="خدمة تحميل الفيديوهات">
+        </iframe>
+
+        <div style="margin-top: 20px; opacity: 0.7; padding: 15px;">
+            <p>💡 <strong>يدعم جميع المنصات:</strong> يوتيوب، فيسبوك، انستجرام، تيك توك، تويتر، وغيرها</p>
+            <p>📥 <strong>الصيغ المتاحة:</strong> MP4, MP3, WEBM, 3GP, AVI, وغيرها</p>
+            <p>🎯 <strong>الجودات:</strong> 144p, 240p, 360p, 480p, 720p, 1080p, 2K, 4K</p>
+        </div>
+    </div>
+
+    <script>
+        function openSaveFrom() {
+            const url = document.getElementById('videoUrl').value;
+            
+            if (!url) {
+                alert('من فضلك أدخل رابط الفيديو أولاً');
+                return;
+            }
+
+            const frame = document.getElementById('downloadFrame');
+            
+            // SaveFrom.net مع الرابط مباشرة
+            const saveFromUrl = `https://en.savefrom.net/#url=${encodeURIComponent(url)}`;
+            
+            // تحميل SaveFrom في الإطار
+            frame.src = saveFromUrl;
+            
+            // تأكيد للمستخدم
+            alert('✅ تم فتح SaveFrom.net\nجاري تحليل الرابط تلقائياً...');
+        }
+
+        function openY2Mate() {
+            const url = document.getElementById('videoUrl').value;
+            
+            if (!url) {
+                alert('من فضلك أدخل رابط الفيديو أولاً');
+                return;
+            }
+
+            const frame = document.getElementById('downloadFrame');
+            
+            // Y2Mate مباشرة
+            const y2mateUrl = `https://www.y2mate.guru/`;
+            
+            frame.src = y2mateUrl;
+            
+            // محاولة تمرير الرابط بعد تحميل الصفحة
+            setTimeout(() => {
+                try {
+                    // هذه محاولة لملء الحقل تلقائياً (قد لاتعمل مع كل المواقع)
+                    if (frame.contentWindow && frame.contentWindow.document) {
+                        const inputs = frame.contentWindow.document.querySelectorAll('input[type="text"], input[type="url"]');
+                        if (inputs.length > 0) {
+                            inputs[0].value = url;
+                        }
+                    }
+                } catch (e) {
+                    // تجاهل الأخطاء بسبب سياسة CORS
+                    console.log('لا يمكن الوصول إلى محتوى الإطار لأسباب أمنية');
+                }
+            }, 3000);
+            
+            alert('✅ تم فتح Y2Mate.com\nيمكنك لصق الرابط في الموقع يدوياً');
+        }
+
+        function openConverter() {
+            const url = document.getElementById('videoUrl').value;
+            
+            if (!url) {
+                alert('من فضلك أدخل رابط الفيديو أولاً');
+                return;
+            }
+
+            const frame = document.getElementById('downloadFrame');
+            
+            // Online Video Converter
+            const converterUrl = `https://www.onlinevideoconverter.com/`;
+            
+            frame.src = converterUrl;
+            
+            alert('✅ تم فتح Online-Converter.com\nيمكنك لصق الرابط في الموقع يدوياً');
+        }
+
+        // الضغط على Enter يفتح SaveFrom
+        document.getElementById('videoUrl').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                openSaveFrom();
+            }
+        });
+
+        // تركيز على حقل الإدخال عند فتح الصفحة
+        window.addEventListener('load', function() {
+            document.getElementById('videoUrl').focus();
+        });
+
+        // إضافة تأثير عند التحميل
+        document.getElementById('downloadFrame').addEventListener('load', function() {
+            console.log('تم تحميل خدمة التحميل بنجاح');
+        });
+    </script>
+
+    <!-- كود AdSense (لما تسجل) -->
+    <!--
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXX"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+    -->
+</body>
+</html>
